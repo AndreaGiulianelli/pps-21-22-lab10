@@ -59,6 +59,7 @@ average([X|Xs], C, S, A) :-
 % max ( List , Max )
 % Max is the biggest element in List
 % Suppose the list has at least one element
+% Version with temps, below version without
 max([H|T], M) :- max([H|T], M, H).
 max([], Temp, Temp).
 max([H|T], M, Temp) :- Temp > H, max(T, M, Temp).
@@ -66,7 +67,7 @@ max([H|T], M, Temp) :- H >= Temp, max(T, M, H).
 
 % max without temp
 max2([E], E).
-max2([H|T], Temp) :- max2(T, Temp), Temp > H.
+max2([H|T], Temp) :- max2(T, Temp), Temp >= H.
 max2([H|T], H) :- max2(T, Temp), H > Temp.
 
 % 2.6
@@ -74,6 +75,7 @@ max2([H|T], H) :- max2(T, Temp), H > Temp.
 % Max is the biggest element in List
 % Min is the smallest element in List
 % Suppose the list has at least one element
+% Version with temps, below version without
 max_min([H|T], Max, Min) :- max_min([H|T], Max, Min, H, H).
 max_min([], TMax, TMin, TMax, TMin).
 max_min([H|T], Max, Min, TMax, TMin) :- TMax > H, TMin =< H, max_min(T, Max, Min, TMax, TMin).
@@ -81,3 +83,36 @@ max_min([H|T], Max, Min, TMax, TMin) :- TMax > H, H < TMin, max_min(T, Max, Min,
 max_min([H|T], Max, Min, TMax, TMin) :- H >= TMax, max_min(T, Max, Min, H, TMin).
 
 % max_min without temps
+max_min2([E], E, E).
+max_min2([H|T], TempMax, TempMin) :- max_min2(T, TempMax, TempMin), TempMax >= H, TempMin =< H.
+max_min2([H|T], TempMax, H) :- max_min2(T, TempMax, TempMin), TempMax >= H, H < TempMin.
+max_min2([H|T], H, TempMin) :- max_min2(T, TempMax, TempMin), H > TempMax.
+
+% 3.1
+% same ( List1 , List2 )
+% are the two lists exactly the same ?
+% fully relational
+%	-> same([1,2], X)
+%	-> same(X, [1,2])
+same([],[]).
+same([X|Xs],[X|Ys]) :- same(Xs, Ys).
+
+% 3.2
+% all_bigger (List1, List2)
+% all elements in List1 are bigger than those in List2, 1 by 1
+% example: all_bigger([10, 20, 30, 40], [9, 19, 29, 39]).
+% List must have the same size
+all_bigger([X], [Y]) :- X > Y.
+all_bigger([X|Tx], [Y|Ty]) :- X > Y, all_bigger(Tx, Ty).
+
+%3.3
+% sublist(List1, List2)
+% List1 should contain elements all also in List2
+% example: sublist([1, 2], [5, 3, 2, 1]).
+sublist([], L).
+sublist([H|T], L) :- search(H, L), sublist(T, L).
+
+
+% 4.1
+% seq(N, List)
+% example: seq(5, [0, 0, 0, 0, 0]).

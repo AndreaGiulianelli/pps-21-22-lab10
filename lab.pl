@@ -116,3 +116,46 @@ sublist([H|T], L) :- search(H, L), sublist(T, L).
 % 4.1
 % seq(N, List)
 % example: seq(5, [0, 0, 0, 0, 0]).
+% It's not fully relational because the math operators are not relational.
+seq(0, []).
+seq(N, [0|T]) :- N2 is N - 1, seq(N2, T).
+
+% 4.2
+% seqR(N, List)
+% example: seqR(4, [4, 3, 2, 1, 0]).
+seqR(0, [0]).
+seqR(N, [N|T]) :- N2 is N - 1, seqR(N2, T).
+
+% 4.3
+% seqR2(N, List)
+% example: seqR2(4, [0, 1, 2, 3, 4]).
+seqR2(0, [0]).
+seqR2(N, L) :- N >= 0, last(P, N, L), N2 is N - 1, seqR2(N2, P).
+
+last([], N, [N]).
+last([H|T], N, [H|T1]) :- last(T, N, T1).
+
+% 5
+% last_list
+% last_list(N, List)
+% last element of the List
+% fully relational
+%	-> last_list(N, [1, 2, 3, 4, 5])
+%	-> last_list(5, L)
+last_list(N, [N]).
+last_list(N, [H|T]) :- last_list(N, T).
+
+% filter
+% filter(List, Value, Res)
+% Select all the elements of the list that are >= Value
+% example: filter([10, 5, 20, 0, 40], 10, L)
+filter([], Value, []).
+filter([H|T], Value, [H|T1]) :- H >= Value, filter(T, Value, T1).
+filter([H|T], Value, L) :- H < Value, filter(T, Value, L).
+
+% drop
+% drop(List, N, Res)
+% Select all elements except first N ones.
+% example: drop([1,2,3,4], 2, [3,4]).
+drop(L, 0, L).
+drop([H|T], N, L) :- N > 0, N2 is N - 1, drop(T, N2, L).

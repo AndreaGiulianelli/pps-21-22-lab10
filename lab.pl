@@ -1,3 +1,4 @@
+%=====1======
 % search(Elem, List)
 search(X, [X|_]).
 search(X, [_|Xs]) :- search(X, Xs).
@@ -12,6 +13,7 @@ search2(X, [_|Xs]) :- search2(X, Xs).
 % fully relational 
 %   -> search_two(X, [a, d, a, c, d, c, f, g])
 %   -> search_two(c, [a, _ , _, c, d, _, f, g])
+%   -> search_two(X, [a, _ , _, c, d, _, f, g])
 search_two(X, [X, _, X|_]).
 search_two(X, [_|T]) :- search_two(X, T).
 
@@ -21,6 +23,7 @@ search_two(X, [_|T]) :- search_two(X, T).
 search_anytwo(X, [X|T]) :- search(X, T).
 search_anytwo(X, [H|T]) :- search_anytwo(X, T).
 
+%=====2======
 % 2.1
 % size ( List , Size )
 % Size will contain the number of elements in List
@@ -85,9 +88,11 @@ max_min([H|T], Max, Min, TMax, TMin) :- H >= TMax, max_min(T, Max, Min, H, TMin)
 % max_min without temps
 max_min2([E], E, E).
 max_min2([H|T], TempMax, TempMin) :- max_min2(T, TempMax, TempMin), TempMax >= H, TempMin =< H.
-max_min2([H|T], TempMax, H) :- max_min2(T, TempMax, TempMin), TempMax >= H, H < TempMin.
+max_min2([H|T], TempMax, H) :- max_min2(T, TempMax, TempMin), TempMax > H, H < TempMin.
 max_min2([H|T], H, TempMin) :- max_min2(T, TempMax, TempMin), H > TempMax.
 
+
+%=====3======
 % 3.1
 % same ( List1 , List2 )
 % are the two lists exactly the same ?
@@ -113,6 +118,7 @@ sublist([], L).
 sublist([H|T], L) :- search(H, L), sublist(T, L).
 
 
+%=====4======
 % 4.1
 % seq(N, List)
 % example: seq(5, [0, 0, 0, 0, 0]).
@@ -135,6 +141,8 @@ seqR2(N, L) :- N >= 0, last(P, N, L), N2 is N - 1, seqR2(N2, P).
 last([], N, [N]).
 last([H|T], N, [H|T1]) :- last(T, N, T1).
 
+
+%=====5======
 % 5
 % last_list
 % last_list(N, List)
